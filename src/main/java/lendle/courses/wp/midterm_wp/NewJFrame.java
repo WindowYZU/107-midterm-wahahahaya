@@ -10,11 +10,14 @@ import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.AccessibleAttribute;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingUtilities;
 
@@ -22,6 +25,7 @@ import javax.swing.SwingUtilities;
  *
  * @author lendle
  */
+
 public class NewJFrame extends javax.swing.JFrame {
 
     static ProgressDialog progress = null;
@@ -31,6 +35,9 @@ public class NewJFrame extends javax.swing.JFrame {
      */
     public NewJFrame() {
         initComponents();
+       
+        DefaultListModel model = new DefaultListModel();
+        jList1.setModel(model);
     }
 
     /**
@@ -53,6 +60,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "https://mbtskoudsalg.com/images/png-image-7.png", "http://pngimg.com/uploads/eagle/eagle_PNG1227.png", "https://upload.wikimedia.org/wikipedia/commons/4/4a/Photographer_Barnstar.png", "http://pluspng.com/img-png/bulb-hd-png-light-bulb-png-transparent-image-2048.png", " " }));
 
+        jList1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(jList1);
 
         jScrollPane2.setViewportView(jLabel2);
@@ -98,10 +106,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        //DefaultListModel model = (DefaultListModel) jList1.getModel();
+        //model.addElement(jComboBox1.getSelectedItem());
+        
         try {
             jButton1.setEnabled(false);
-            //從 combobox 抓出被選到的項目，存到變數裡
-            String selectedItem="";
+            //從 combobox 抓出被選到的項目，存到變數裡     
+            
+            String selectedItem=(String)jComboBox1.getSelectedItem();
+            
+            //System.out.println(selectedItem);
             /////////////////////////////////////
             URL url = new URL(selectedItem);
             String fileName = url.getFile();
@@ -119,6 +133,18 @@ public class NewJFrame extends javax.swing.JFrame {
                         jButton1.setEnabled(true);
                         //將下載好的項目加入到 jList 裡面
                         
+                        
+                        
+                        DefaultListModel model = (DefaultListModel) jList1.getModel();
+                        model.addElement(selectedItem); 
+                        
+                        
+                        jList1.setModel(model);
+                                           
+                        
+                        
+                        //jScrollPane1 = new JScrollPane(jList1);
+                        
                         ////////////////////////////
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
@@ -126,7 +152,14 @@ public class NewJFrame extends javax.swing.JFrame {
                                 try {
                                     URL fileURL=tempFile.toURI().toURL();
                                     //利用 fileURL 將 image icon 加到 jLabel2
+                                    
+                                    ImageIcon icon = new ImageIcon(fileURL);
+                                    Image image = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                                    ImageIcon icon2 = new ImageIcon(image);
+                                    jLabel2.setIcon(icon2);
+                                    
                                     ////////////////////////////////////////
+                                    
                                     jList1.updateUI();
                                 } catch (Exception ex) {
                                     Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);

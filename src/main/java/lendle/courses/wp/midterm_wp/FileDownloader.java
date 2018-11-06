@@ -21,7 +21,8 @@ import java.util.logging.Logger;
  */
 public class FileDownloader {
     static void downloadFile(final URL url, final File destinationFile, final FileDownloaderCallback callback){
-        Thread t=new Thread(){
+        Thread t;
+        t = new Thread(){
             public void run(){
                 try{
                     byte [] buffer=new byte[4096];
